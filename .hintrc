@@ -7,5 +7,14 @@
     "not ie 11",
     "not and_ff <= 126",
     "not firefox <= 127"
-  ]
+  ],
+  "hints": {
+    "button-type": "off",
+    "axe/name-role-value": [
+      "default",
+      {
+        "button-name": "off"
+      }
+    ]
+  }
 }
