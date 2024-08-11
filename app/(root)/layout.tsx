@@ -2,6 +2,15 @@
 
 import StreamVideoProvider from '@/providers/StreamClientProvider'
 import React, { ReactNode } from 'react'
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "MADHAN's ZOOM",
+  description: "Video calling app",
+  icons: {
+    icon: '/icons/logo.svg',
+  }
+};
 
 const RootLayout = ({ children }: {children: ReactNode}) => { //since its typescript we are declaring children type as ReactNode
   return (

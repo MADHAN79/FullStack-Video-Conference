@@ -1,5 +1,7 @@
+'use client'
+
 import { cn } from '@/lib/utils';
-import { CallControls, CallParticipantsList, CallStatsButton, PaginatedGridLayout, SpeakerLayout } from '@stream-io/video-react-sdk';
+import { CallControls, CallingState, CallParticipantsList, CallStatsButton, PaginatedGridLayout, SpeakerLayout, useCallStateHooks } from '@stream-io/video-react-sdk';
 import React, { useState } from 'react'
 
 import {
@@ -13,6 +15,7 @@ import {
 import { LayoutList, Users } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import EndCallButton from './EndCallButton';
+import Loader from './Loader';
 
 
 type CallLayoutType = 'grid' | 'speaker-left' | 'speaker-right';
@@ -29,6 +32,16 @@ const MeetingRoom = () => {
     const [layout, setLayout] = useState<CallLayoutType>('speaker-left');
 
     const [showParticipants, setShowParticipants] = useState(false);
+
+    // <-----------
+
+    const { useCallCallingState } = useCallStateHooks();
+    // for more detail about types of CallingState see: https://getstream.io/video/docs/react/ui-cookbook/ringing-call/#incoming-call-panel
+    const callingState = useCallCallingState();
+
+    if (callingState !== CallingState.JOINED) return <Loader />;
+
+    // ------->
 
     const CallLayout = () => { //it will render specific layout depending on the current layout state.
         switch (layout) {
@@ -58,7 +71,7 @@ const MeetingRoom = () => {
             </div>
 
             {/* video layout and call controls */}
-            <div className="fixed bottom-0 flex w-full items-center justify-center gap-5">
+            <div className="fixed bottom-0 flex w-full items-center justify-center gap-5 flex-wrap">
                 <CallControls />
 
                 <DropdownMenu>
