@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import MobileNav from './MobileNav'
+import { SignedIn, UserButton } from '@clerk/nextjs'
 
 const Navbar = () => {
   return (
@@ -24,9 +25,9 @@ const Navbar = () => {
 
       {/* the flex-between is not the tailwindcss property rather it defined by us in globals.css file see that */}
       <div className="flex-between gap-5">
-        {/* <SignedIn>
-          <UserButton afterSignOutUrl="/sign-in" />
-        </SignedIn> */}
+        <SignedIn>
+          <UserButton/>
+        </SignedIn>
 
         <MobileNav />
       </div>      
