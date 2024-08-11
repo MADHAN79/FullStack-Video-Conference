@@ -4,9 +4,17 @@ import { useState } from "react";
 import HomeCard from "./HomeCard"
 import { useRouter } from "next/navigation"; //REMEMBER: router is from next.navigation not from next.router
 import MeetingModal from "./MeetingModal";
+import { useUser } from "@clerk/nextjs";
+import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 
 //whenever we use some interactivity to the website like onClick / event listeners,etc.,
 //we should mention that file to use CLIENT SIDE RENDERING thats the rule of NEXT.JS
+
+const initialValues = {
+  dateTime: new Date(),
+  description: '',
+  link: '',
+};
 
 const MeetingTypeList = () => {
 
@@ -17,9 +25,51 @@ const MeetingTypeList = () => {
     'isScheduleMeeting' | 'isJoiningMeeting' | 'isInstantMeeting' | undefined
     >(undefined); //in this the state is of four, like three ...Meeting and one "initial state" undefined.
 
+    const [callDetail, setCallDetails] = useState<Call>(); //useState types are mentioned like this btw <>.
+
+    //to check if the user exists
+    const { user } = useUser();
+
+    //initializing video client
+    const client = useStreamVideoClient();
+
+    const [values, setValues] = useState(initialValues);
+
     const createMeeting = async () => {
         
-    }
+      //without the client/user we dont create a meeting
+          if (!client || !user) return;
+        try {
+          
+          //this crypto is directly comming from javascript crypto global property, it generates random number.
+          //cryto generates random number & randomUUID generates random ID.
+          const id = crypto.randomUUID(); 
+
+          const call = client.call('default', id);
+
+          if (!call) throw new Error('Failed to create meeting');
+          const startsAt =
+            values.dateTime.toISOString() || new Date(Date.now()).toISOString();
+          const description = values.description || 'Instant Meeting';
+          await call.getOrCreate({
+            data: {
+              starts_at: startsAt,
+              custom: {
+                description,
+              },
+            },
+          });
+          setCallDetails(call);
+
+          if (!values.description) {
+            router.push(`/meeting/${call.id}`); //navigating to specific room with particular call.id
+          }
+          
+        } catch (error) {
+          console.log(error);
+          
+        }
+      };
 
 
   return (
