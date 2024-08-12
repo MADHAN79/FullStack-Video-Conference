@@ -17,7 +17,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 //this meta data details @ import statement is on all 3 layout.tsx files
 export const metadata: Metadata = {
-  title: "MADHAN's ZOOM",
+  title: "CONNECT",
   description: "Video calling app",
   icons: {
     icon: '/icons/logo.svg',

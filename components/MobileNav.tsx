@@ -29,12 +29,12 @@ const MobileNav = () => {
                 src="/icons/logo.svg"
                 width={32}
                 height={32}
-                alt="Yoom logo"
+                alt="CONNECT logo"
                 className="max-sm:size-10"
                 />
                 {/* in tailwindcss whenever we want to apply specific values, we put that inside [] brackets eg:text-[12px] */}
-                <p className="text-[26px] font-extrabold text-white"> 
-                YOOM
+                <p className="font-serif text-[26px] font-extrabold text-connect-1"> 
+                CONNECT
                 </p>
             </Link>
 

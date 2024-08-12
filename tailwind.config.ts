@@ -42,6 +42,9 @@ const config = {
           yellow: {
             1: '#F9A90E',
           },
+          connect:{
+            1: '#38bdf8',
+          },
         },
       backgroundImage: {
         hero: "url('/images/hero-background.png')",
