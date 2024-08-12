@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "CONNECT",
   description: "Video calling app",
   icons: {
-    icon: '/icons/logo.svg',
+    icon: '/icons/connectLogo.png',
   }
 };
 

@@ -26,9 +26,9 @@ const MobileNav = () => {
             <SheetContent side="left" className="border-none bg-dark-1">
             <Link href="/" className="flex links-center gap-1">
                 <Image
-                src="/icons/logo.svg"
-                width={32}
-                height={32}
+                src="/icons/connectLogo.png"
+                width={64}
+                height={64}
                 alt="CONNECT logo"
                 className="max-sm:size-10"
                 />
