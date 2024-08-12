@@ -8,6 +8,7 @@ import { Call, CallRecording } from '@stream-io/video-react-sdk';
 import { useGetCalls } from '@/hooks/useGetCalls';
 import { useRouter } from 'next/navigation';
 import MeetingCard from './MeetingCard';
+import { useToast } from './ui/use-toast';
 
 
 const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
@@ -44,7 +45,37 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
         return '';
     }
   };
+
+  const { toast } = useToast();
   
+  useEffect(() => {
+    const fetchRecordings = async () => {
+      try {
+        const callData = await Promise.all(
+          callRecordings?.map((meeting) => meeting.queryRecordings()) ?? [],
+        );
+  
+        const recordings = callData
+          //only if the call recordings array has length more than zero it has recordings in it.
+          .filter((call) => call.recordings.length > 0) 
+          
+          //the recording array has multiple subarrays in it, the .flatMap wil make the call array 
+          //ONE SINGLE ARRAY BY COMBINING THOSE MULTIPLE SUBARRAYS TO ONE MAIN ARRAY. i.e:flattening the array
+          .flatMap((call) => call.recordings); 
+  
+        setRecordings(recordings);
+        
+      } catch (error) {
+        toast({ title: 'Try again later' })
+      }
+      
+    };
+
+    if (type === 'recordings') { //only it type recordings we are gonna call this func. simply an additional filter.
+      fetchRecordings();
+    }
+  }, [type, callRecordings]); 
+
   //only if we use this, the loading animation get displayed before the delay in showing the upcoming meetings ORELSE
   //THE {NOCALLSMESSAGE} at the bottom most of this code page will get displayed before showing the upcoming meetings lists.
   if (isLoading) return <Loader />;
@@ -67,8 +98,8 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
           }
           title={
             //if the meeting is of type Call it has state / meeting is of type CallRecording it DON'T HAVE .state
-            (meeting as Call).state?.custom?.description ||
-            (meeting as CallRecording).filename?.substring(0, 20) || //if our description is longer, by this condition[substring(0,20)] ONLY first 20 CHARACTERS will be displayed in the div.
+            (meeting as Call).state?.custom?.description || //if our description is longer, by this condition[substring(0,20)] ONLY first 20 CHARACTERS will be displayed in the div.
+            (meeting as CallRecording).filename?.substring(0, 20) || //filename gets the id of the recording.
             'No Description'
           }
           date={
