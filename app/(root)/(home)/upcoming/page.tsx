@@ -1,4 +1,4 @@
-import React from 'react'
+import CallList from '@/components/CallList'
 
 const Upcoming = () => {
   return (
@@ -7,7 +7,8 @@ const Upcoming = () => {
         Upcoming
       </h1>
 
-      
+      {/* reusable component plays the role here as CallList :) */}
+      <CallList type="upcoming" />       
     </section>
   )
 }

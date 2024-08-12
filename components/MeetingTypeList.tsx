@@ -8,6 +8,8 @@ import { useUser } from "@clerk/nextjs";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 
 import { useToast } from "@/components/ui/use-toast"
+import { Textarea } from "./ui/textarea";
+import ReactDatePicker from 'react-datepicker';
 
 //whenever we use some interactivity to the website like onClick / event listeners,etc.,
 //we should mention that file to use CLIENT SIDE RENDERING thats the rule of NEXT.JS
@@ -69,7 +71,7 @@ const MeetingTypeList = () => {
           },
         },
       });
-      setCallDetails(call);
+      setCallDetails(call); //setting call details for  the current call.
 
       if (!values.description) {
         router.push(`/meeting/${call.id}`); //navigating to specific room with particular call.id
@@ -83,6 +85,8 @@ const MeetingTypeList = () => {
     }
   };
 
+  //with this we get the meetingLink for the schedule
+  const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${callDetail?.id}`;
 
   return (
     //since all divs are boxes,instead of flex, grid makes easier alignment with reponsiveness here
@@ -116,6 +120,66 @@ const MeetingTypeList = () => {
         className="bg-yellow-1"
         handleClick={() => router.push('/recordings')} //only in this HomeCard we are routing to another page, all three calls a modal(means popup)
       />
+
+        {/* if call details exists we are gonna schedule a meeting or-else not */}
+        {!callDetail ? (
+            <MeetingModal
+            isOpen={meetingState === 'isScheduleMeeting'}
+            onClose={() => setMeetingState(undefined)}
+            title="Create Meeting"
+            handleClick={createMeeting}
+          >
+            <div className="flex flex-col gap-2.5">
+            <label className="text-base font-normal leading-[22.4px] text-sky-2">
+              Add a description
+            </label>
+
+            {/* npx shadcn-ui@latest add textarea */}
+            <Textarea
+              className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0" //ring-offset stops higlighting the textarea whenever we hover the mouse over textarea.
+              onChange={(e) =>
+                setValues({ ...values, description: e.target.value })//spreading all the values and modify the description
+              }
+            />
+          </div>
+
+          <div className="flex w-full flex-col gap-2.5">
+            <label className="text-base font-normal leading-[22.4px] text-sky-2">
+              Select Date and Time
+            </label>
+
+            {/* npm install react-datepicker */}
+            {/* npm i --save-dev @types/react-datepicker */}
+            {/* for this we have to import its corresponding css file or else everything will be shown out of the datepicker in app layout.tsx. */}
+            <ReactDatePicker
+              selected={values.dateTime}
+              onChange={(date) => setValues({ ...values, dateTime: date! })}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={5}
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa"
+              className="w-full rounded bg-dark-3 p-2 focus:outline-none"
+            />
+          </div>
+
+        </MeetingModal>
+        ) :(
+          <MeetingModal
+              isOpen={meetingState === 'isScheduleMeeting'}
+              onClose={() => setMeetingState(undefined)}
+              title="Meeting Created"
+              handleClick={() => {
+                navigator.clipboard.writeText(meetingLink);
+                toast({ title: 'Link Copied' });
+              }}
+              image={'/icons/checked.svg'}
+              buttonIcon="/icons/copy.svg"
+              className="text-center"
+              buttonText="Copy Meeting Link"
+          />
+        )
+        }
 
       <MeetingModal  //THIS IS THE POPUP MODAL, here we are passing props to how it needs to behave while opening & closing.
         isOpen={meetingState === 'isInstantMeeting'} //this popup is for Join meeting div

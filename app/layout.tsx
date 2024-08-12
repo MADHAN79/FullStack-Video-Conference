@@ -8,6 +8,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 //this give the StreamTheme the layout for mutiple persons
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 
+//this is the own css file import for external library of ReactDatePicker component in MeetingTypeList
+import "react-datepicker/dist/react-datepicker.css";
+
 import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] });
