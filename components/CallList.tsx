@@ -100,7 +100,7 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
             //if the meeting is of type Call it has state / meeting is of type CallRecording it DON'T HAVE .state
             (meeting as Call).state?.custom?.description || //if our description is longer, by this condition[substring(0,20)] ONLY first 20 CHARACTERS will be displayed in the div.
             (meeting as CallRecording).filename?.substring(0, 20) || //filename gets the id of the recording.
-            'No Description'
+            'Personal Meeting'
           }
           date={
             (meeting as Call).state?.startsAt?.toLocaleString() ||
